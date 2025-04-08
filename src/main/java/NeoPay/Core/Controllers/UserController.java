@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
@@ -20,5 +22,10 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getSelf(){
         return ResponseEntity.status(200).body(userService.getSelf());
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserResponse>> findAllUsers(){
+        return ResponseEntity.status(200).body(userService.findAllUsers());
     }
 }

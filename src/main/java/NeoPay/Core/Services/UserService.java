@@ -10,5 +10,5 @@ public interface UserService {
     UserResponse getSelf();
 
     //Admin
-    List<User> findAllUsers();
+    List<UserResponse> findAllUsers();
 }
