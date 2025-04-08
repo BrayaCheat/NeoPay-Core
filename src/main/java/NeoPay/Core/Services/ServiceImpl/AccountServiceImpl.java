@@ -28,8 +28,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountResponse createAccount(Long userId, AccountRequest dto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User id: " + userId + " not found!"));
+    public AccountResponse createAccount(AccountRequest dto) {
+        User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new NotFoundException("User id: " + dto.getUserId() + " not found!"));
         if(user.getAccounts().toArray().length == 2){
             throw new RuntimeException("A user can only have 2 accounts!");
         }

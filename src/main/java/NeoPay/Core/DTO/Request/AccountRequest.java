@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AccountRequest {
 
+    @NotNull(message = "User id is required")
+    private Long userId;
+
     @NotBlank(message = "Account name is required")
     private String accountName;
 

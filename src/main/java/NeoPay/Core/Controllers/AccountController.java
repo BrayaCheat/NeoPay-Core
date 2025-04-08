@@ -17,8 +17,8 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<AccountResponse> createAccount(@RequestParam(name = "userId") Long userId, @RequestBody AccountRequest dto){
-        return ResponseEntity.status(201).body(accountService.createAccount(userId, dto));
+    public ResponseEntity<AccountResponse> createAccount(@RequestBody AccountRequest dto){
+        return ResponseEntity.status(201).body(accountService.createAccount(dto));
     }
 
     @GetMapping("/{accountId}")

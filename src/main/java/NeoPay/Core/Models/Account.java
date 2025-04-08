@@ -10,6 +10,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -35,7 +37,7 @@ public class Account {
     @Column()
     private BigDecimal balance;
 
-    @Column()
+    @Column(length = 3, nullable = false)
     private String currency;
 
     @Column()
@@ -47,6 +49,13 @@ public class Account {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    private List<Transaction> sentTransactions;
+
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
+    private List<Transaction> receivedTransactions;
+
 
     @CreationTimestamp
     @Column(name = "created_at")

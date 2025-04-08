@@ -6,6 +6,6 @@ import NeoPay.Core.DTO.Response.AccountResponse;
 import java.util.List;
 
 public interface AccountService {
-    AccountResponse createAccount(Long userId, AccountRequest dto);
+    AccountResponse createAccount(AccountRequest dto);
     AccountResponse getAccount(Long accountId);
 }
