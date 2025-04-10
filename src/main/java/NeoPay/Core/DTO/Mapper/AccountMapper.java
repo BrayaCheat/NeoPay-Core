@@ -11,5 +11,7 @@ public interface AccountMapper {
     // Map DTO -> Entity (Request)
     Account toEntity(AccountRequest dto);
     // Map Entity -> DTO (Response)
+//    @Mapping(source = "user.fullName", target = "userName")
+//    @Mapping(source = "user.id", target = "userId")
     AccountResponse toDTO(Account account);
 }

@@ -1,9 +1,7 @@
 package NeoPay.Core.Services;
 
-import NeoPay.Core.DTO.Mapper.UserMapper;
 import NeoPay.Core.DTO.Request.LoginRequest;
 import NeoPay.Core.DTO.Request.RegisterRequest;
-import NeoPay.Core.DTO.Response.UserResponse;
 import NeoPay.Core.Models.Role;
 import NeoPay.Core.Models.User;
 import NeoPay.Core.Repositories.RoleRepository;
@@ -14,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -67,6 +64,10 @@ public class AuthenticationService {
         userRepository.save(user);
 
         return user;
+    }
+
+    public void logout(){
+
     }
 
 }

@@ -13,6 +13,8 @@ import NeoPay.Core.Utilities.AccountUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -49,5 +51,14 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountResponse getAccount(Long accountId) {
         return accountMapper.toDTO(accountRepository.findById(accountId).orElseThrow(() -> new NotFoundException("Account id: " + accountId + " not found!")));
+    }
+
+    @Override
+    public Map<String, BigDecimal> getTotalBalance(Long userId) {
+        BigDecimal total = accountRepository.findTotalBalanceByUserId(userId);
+        total = total != null ? total : BigDecimal.ZERO;
+        Map<String, BigDecimal> response = new HashMap<>();
+        response.put("totalBalance", total);
+        return response;
     }
 }

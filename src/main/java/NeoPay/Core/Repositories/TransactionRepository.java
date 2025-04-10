@@ -1,8 +1,17 @@
 package NeoPay.Core.Repositories;
 
+
 import NeoPay.Core.Models.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
+@Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long>, JpaSpecificationExecutor<Transaction> {
+    @Query(value = "select * from transactions where sender_id = :accountId or receiver_id = :accountId", nativeQuery = true)
+    List<Transaction> getTransaction(@Param("accountId") Long accountId);
 }

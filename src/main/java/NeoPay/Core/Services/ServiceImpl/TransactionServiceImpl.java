@@ -1,17 +1,22 @@
 package NeoPay.Core.Services.ServiceImpl;
 
+import NeoPay.Core.DTO.Mapper.AccountMapper;
 import NeoPay.Core.DTO.Mapper.TransactionMapper;
 import NeoPay.Core.DTO.Request.TransactionRequest;
 import NeoPay.Core.DTO.Response.TransactionResponse;
 import NeoPay.Core.Exceptions.NotFoundException;
 import NeoPay.Core.Models.Account;
 import NeoPay.Core.Models.Transaction;
+import NeoPay.Core.Models.User;
 import NeoPay.Core.Repositories.AccountRepository;
 import NeoPay.Core.Repositories.TransactionRepository;
 import NeoPay.Core.Services.TransactionService;
 import NeoPay.Core.Utilities.TransactionUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -19,11 +24,15 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
     private final TransactionMapper transactionMapper;
     private final AccountRepository accountRepository;
+    private final AccountMapper accountMapper;
+    private final TransactionUtils transactionUtils;
 
-    public TransactionServiceImpl(TransactionRepository transactionRepository, TransactionMapper transactionMapper, AccountRepository accountRepository) {
+    public TransactionServiceImpl(TransactionRepository transactionRepository, TransactionMapper transactionMapper, AccountRepository accountRepository, AccountMapper accountMapper, TransactionUtils transactionUtils) {
         this.transactionRepository = transactionRepository;
         this.transactionMapper = transactionMapper;
         this.accountRepository = accountRepository;
+        this.accountMapper = accountMapper;
+        this.transactionUtils = transactionUtils;
     }
 
     @Transactional
@@ -88,7 +97,18 @@ public class TransactionServiceImpl implements TransactionService {
         Account receiver = accountRepository.findById(dto.getReceiverId()).orElseThrow(() -> new NotFoundException("Receiver id: " + dto.getReceiverId() + " not found!"));
 
         if (sender.getBalance().compareTo(dto.getAmount()) < 0) {
-            throw new RuntimeException("Insufficient balance!");
+            Transaction transaction = Transaction.builder()
+                    .sender(sender)
+                    .receiver(receiver)
+                    .amount(dto.getAmount())
+                    .currency("USD")
+                    .reference(TransactionUtils.generateTransactionReferenceId())
+                    .remark("Insufficient balance!")
+                    .type(dto.getType())
+                    .status(Transaction.TransactionStatus.FAILED)
+                    .build();
+            transactionUtils.saveFailedTransaction(transaction);
+            throw new RuntimeException("Insufficient balance! You only have: " + sender.getBalance());
         }
 
         sender.setBalance(sender.getBalance().subtract(dto.getAmount()));
@@ -107,5 +127,10 @@ public class TransactionServiceImpl implements TransactionService {
                 .status(Transaction.TransactionStatus.SUCCESS)
                 .build();
         return transactionMapper.toDTO(transactionRepository.save(transaction));
+    }
+
+    @Override
+    public List<TransactionResponse> getTransaction(Long accountId) {
+        return transactionRepository.getTransaction(accountId).stream().map(transactionMapper::toDTO).toList();
     }
 }

@@ -6,6 +6,9 @@ import NeoPay.Core.Services.ServiceImpl.AccountServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/accounts")
 public class AccountController {
@@ -24,5 +27,10 @@ public class AccountController {
     @GetMapping("/{accountId}")
     public ResponseEntity<AccountResponse> getAccount(@PathVariable(name = "accountId") Long accountId){
         return ResponseEntity.status(200).body(accountService.getAccount(accountId));
+    }
+
+    @GetMapping("/{userId}/balance")
+    public ResponseEntity<Map<String, BigDecimal>> getTotalBalance(@PathVariable(name = "userId") Long userId){
+        return ResponseEntity.status(200).body(accountService.getTotalBalance(userId));
     }
 }

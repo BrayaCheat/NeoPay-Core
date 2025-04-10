@@ -5,10 +5,9 @@ import NeoPay.Core.DTO.Response.TransactionResponse;
 import NeoPay.Core.Services.ServiceImpl.TransactionServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/transactions")
@@ -23,5 +22,10 @@ public class TransactionController {
     @PostMapping
     public ResponseEntity<TransactionResponse> createTransaction(@Valid @RequestBody TransactionRequest dto){
         return ResponseEntity.status(201).body(transactionService.createTransaction(dto));
+    }
+
+    @GetMapping("/{accountId}")
+    public ResponseEntity<List<TransactionResponse>> getTransactions(@PathVariable Long accountId){
+        return ResponseEntity.status(200).body(transactionService.getTransaction(accountId));
     }
 }

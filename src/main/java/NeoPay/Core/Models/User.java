@@ -71,7 +71,7 @@ public class User implements UserDetails {
     )
     private Set<Role> role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Account> accounts = new ArrayList<>();
 
     @Override
