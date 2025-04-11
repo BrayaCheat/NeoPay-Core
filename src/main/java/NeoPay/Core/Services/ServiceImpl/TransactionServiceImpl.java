@@ -12,6 +12,9 @@ import NeoPay.Core.Repositories.AccountRepository;
 import NeoPay.Core.Repositories.TransactionRepository;
 import NeoPay.Core.Services.TransactionService;
 import NeoPay.Core.Utilities.TransactionUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -130,7 +133,21 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<TransactionResponse> getTransaction(Long accountId) {
-        return transactionRepository.getTransaction(accountId).stream().map(transactionMapper::toDTO).toList();
+    public List<TransactionResponse> getTransaction(Long accountId, Pageable pageable) {
+        Specification<Transaction> spec = TransactionUtils.sentOrReceived(accountId);
+        return transactionRepository.findAll(spec, pageable).stream().map(transactionMapper::toDTO).toList();
     }
+
+    @Override
+    public Page<TransactionResponse> getReceiveTransactions(Long accountId, Pageable pageable, String senderAccountNumber, String receiverAccountNumber) {
+        Specification<Transaction> spec = TransactionUtils.buildTransactionSearchSpec(accountId, true, senderAccountNumber, receiverAccountNumber);
+        return transactionRepository.findAll(spec, pageable).map(transactionMapper::toDTO);
+    }
+
+    @Override
+    public Page<TransactionResponse> getSenderTransactions(Long accountId, Pageable pageable, String senderAccountNumber, String receiverAccountNumber) {
+        Specification<Transaction> spec = TransactionUtils.buildTransactionSearchSpec(accountId, false, senderAccountNumber, receiverAccountNumber);
+        return transactionRepository.findAll(spec, pageable).map(transactionMapper::toDTO);
+    }
+
 }

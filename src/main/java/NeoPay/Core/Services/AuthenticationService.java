@@ -44,6 +44,10 @@ public class AuthenticationService {
                 .fullName(dto.getFullName())
                 .email(dto.getEmail())
                 .password(passwordEncoder.encode(dto.getPassword()))
+                .isActive(true)
+                .isDeleted(false)
+                .isLocked(false)
+                .lastLogin(LocalDateTime.now())
                 .role(role)
                 .build();
         return userRepository.save(user);

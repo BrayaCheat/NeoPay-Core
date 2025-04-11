@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -29,8 +30,13 @@ public class AccountController {
         return ResponseEntity.status(200).body(accountService.getAccount(accountId));
     }
 
-    @GetMapping("/{userId}/balance")
+    @GetMapping("/user/{userId}/balance")
     public ResponseEntity<Map<String, BigDecimal>> getTotalBalance(@PathVariable(name = "userId") Long userId){
         return ResponseEntity.status(200).body(accountService.getTotalBalance(userId));
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<AccountResponse>> getAccountByUserId(@PathVariable(name = "userId") Long userId){
+        return ResponseEntity.status(200).body(accountService.getAccountByUserId(userId));
     }
 }

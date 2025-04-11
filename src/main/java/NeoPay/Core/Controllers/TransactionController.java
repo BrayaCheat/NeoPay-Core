@@ -4,6 +4,10 @@ import NeoPay.Core.DTO.Request.TransactionRequest;
 import NeoPay.Core.DTO.Response.TransactionResponse;
 import NeoPay.Core.Services.ServiceImpl.TransactionServiceImpl;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,12 +24,60 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<TransactionResponse> createTransaction(@Valid @RequestBody TransactionRequest dto){
+    public ResponseEntity<TransactionResponse> createTransaction(@Valid @RequestBody TransactionRequest dto) {
         return ResponseEntity.status(201).body(transactionService.createTransaction(dto));
     }
 
     @GetMapping("/{accountId}")
-    public ResponseEntity<List<TransactionResponse>> getTransactions(@PathVariable Long accountId){
-        return ResponseEntity.status(200).body(transactionService.getTransaction(accountId));
+    public ResponseEntity<List<TransactionResponse>> getTransactions(
+            @PathVariable Long accountId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(defaultValue = "desc") String direction
+    ) {
+        Sort sortBy = direction.equalsIgnoreCase("desc") ?
+                Sort.by(sort).descending() : Sort.by(sort).ascending();
+        Pageable pageable = PageRequest.of(Math.max(page - 1, 0), size, sortBy);
+        return ResponseEntity.status(200).body(transactionService.getTransaction(accountId, pageable));
     }
+
+    @GetMapping("/{accountId}/receiver")
+    public ResponseEntity<Page<TransactionResponse>> getReceiveTransactions(
+            @PathVariable Long accountId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(defaultValue = "desc") String direction,
+            @RequestParam(required = false) String senderAccountNumber,
+            @RequestParam(required = false) String receiverAccountNumber
+    ) {
+        Sort sortBy = direction.equalsIgnoreCase("desc") ?
+                Sort.by(sort).descending() : Sort.by(sort).ascending();
+        Pageable pageable = PageRequest.of(Math.max(page - 1, 0), size, sortBy);
+
+        return ResponseEntity.ok(
+                transactionService.getReceiveTransactions(accountId, pageable, senderAccountNumber, receiverAccountNumber)
+        );
+    }
+
+    @GetMapping("/{accountId}/sender")
+    public ResponseEntity<Page<TransactionResponse>> getSenderTransactions(
+            @PathVariable Long accountId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(defaultValue = "desc") String direction,
+            @RequestParam(required = false) String senderAccountNumber,
+            @RequestParam(required = false) String receiverAccountNumber
+    ) {
+        Sort sortBy = direction.equalsIgnoreCase("desc") ?
+                Sort.by(sort).descending() : Sort.by(sort).ascending();
+        Pageable pageable = PageRequest.of(Math.max(page - 1, 0), size, sortBy);
+
+        return ResponseEntity.ok(
+                transactionService.getSenderTransactions(accountId, pageable, senderAccountNumber, receiverAccountNumber)
+        );
+    }
+
 }

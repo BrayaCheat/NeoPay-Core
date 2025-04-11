@@ -11,4 +11,5 @@ public interface AccountService {
     AccountResponse createAccount(AccountRequest dto);
     AccountResponse getAccount(Long accountId);
     Map<String, BigDecimal> getTotalBalance(Long userId);
+    List<AccountResponse> getAccountByUserId(Long userId);
 }

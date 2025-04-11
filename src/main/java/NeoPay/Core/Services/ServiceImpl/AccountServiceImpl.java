@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -60,5 +61,13 @@ public class AccountServiceImpl implements AccountService {
         Map<String, BigDecimal> response = new HashMap<>();
         response.put("totalBalance", total);
         return response;
+    }
+
+    @Override
+    public List<AccountResponse> getAccountByUserId(Long userId) {
+        if(!userRepository.existsById(userId)){
+            throw new NotFoundException("User id: " + userId + "not found!");
+        }
+        return accountRepository.findByUserId(userId).stream().map(accountMapper::toDTO).toList();
     }
 }
