@@ -32,7 +32,7 @@ public class TransactionController {
     public ResponseEntity<List<TransactionResponse>> getTransactions(
             @PathVariable Long accountId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "createdAt") String sort,
             @RequestParam(defaultValue = "desc") String direction
     ) {
@@ -46,7 +46,7 @@ public class TransactionController {
     public ResponseEntity<Page<TransactionResponse>> getReceiveTransactions(
             @PathVariable Long accountId,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "createdAt") String sort,
             @RequestParam(defaultValue = "desc") String direction,
             @RequestParam(required = false) String senderAccountNumber,
@@ -65,7 +65,7 @@ public class TransactionController {
     public ResponseEntity<Page<TransactionResponse>> getSenderTransactions(
             @PathVariable Long accountId,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "createdAt") String sort,
             @RequestParam(defaultValue = "desc") String direction,
             @RequestParam(required = false) String senderAccountNumber,
@@ -80,4 +80,8 @@ public class TransactionController {
         );
     }
 
+    @GetMapping("/{accountId}/transaction-count")
+    public ResponseEntity<Long> transactionCount(@PathVariable Long accountId){
+        return ResponseEntity.status(200).body(transactionService.transactionCount(accountId));
+    }
 }

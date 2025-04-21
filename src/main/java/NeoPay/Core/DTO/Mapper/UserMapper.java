@@ -12,7 +12,6 @@ public interface UserMapper {
     User toEntity(RegisterRequest dto);
     // Map Entity -> DTO (Response)
     @Mapping(source = "id", target = "id")
-    @Mapping(source = "accounts", target = "accounts")
     UserResponse toDTO(User user);
 
 }

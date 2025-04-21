@@ -2,6 +2,7 @@ package NeoPay.Core.Controllers;
 
 import NeoPay.Core.DTO.Request.AccountRequest;
 import NeoPay.Core.DTO.Response.AccountResponse;
+import NeoPay.Core.Models.Account;
 import NeoPay.Core.Services.ServiceImpl.AccountServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,5 +39,11 @@ public class AccountController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<AccountResponse>> getAccountByUserId(@PathVariable(name = "userId") Long userId){
         return ResponseEntity.status(200).body(accountService.getAccountByUserId(userId));
+    }
+
+    @DeleteMapping("/{accountId}")
+    public ResponseEntity<String> deleteAccount(@PathVariable(name = "accountId") Long accountId){
+        accountService.deleteAccount(accountId);
+        return ResponseEntity.status(200).body("Deleted account id: " + accountId);
     }
 }

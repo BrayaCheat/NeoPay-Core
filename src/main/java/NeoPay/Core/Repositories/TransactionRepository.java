@@ -21,4 +21,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>,
     @Query(value = "select * from transactions where sender_id = :accountId", nativeQuery = true)
     List<Transaction> getTransferTransaction(@Param("accountId") Long accountId);
 
+    @Query(value = "select count(id) from transactions where receiver_id = :accountId or sender_id = :accountId", nativeQuery = true)
+    Long transactionCount(@Param("accountId") Long accountId);
 }

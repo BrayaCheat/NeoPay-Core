@@ -12,4 +12,5 @@ public interface AccountService {
     AccountResponse getAccount(Long accountId);
     Map<String, BigDecimal> getTotalBalance(Long userId);
     List<AccountResponse> getAccountByUserId(Long userId);
+    void deleteAccount(Long accountId);
 }

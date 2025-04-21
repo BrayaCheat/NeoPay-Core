@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UserService {
     //General
-    UserResponse getSelf();
+    User getSelf();
 
     //Admin
     List<UserResponse> findAllUsers();

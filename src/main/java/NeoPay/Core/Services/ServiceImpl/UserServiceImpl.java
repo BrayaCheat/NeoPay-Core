@@ -25,10 +25,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse getSelf() {
+    public User getSelf() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
-        return userMapper.toDTO(currentUser);
+//        return userMapper.toDTO(currentUser);
+        return currentUser;
     }
 
     @Override

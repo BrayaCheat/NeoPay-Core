@@ -13,6 +13,8 @@ import NeoPay.Core.Utilities.AccountUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +44,7 @@ public class AccountServiceImpl implements AccountService {
                 .accountNumber(AccountUtils.generateAccountNumber())
                 .balance(BigDecimal.ZERO)
                 .currency("USD")
-                .isActive(true)
+                .active(true)
                 .isDelete(false)
                 .user(user)
                 .build();
@@ -68,6 +70,22 @@ public class AccountServiceImpl implements AccountService {
         if(!userRepository.existsById(userId)){
             throw new NotFoundException("User id: " + userId + "not found!");
         }
-        return accountRepository.findByUserId(userId).stream().map(accountMapper::toDTO).toList();
+        return accountRepository.findByUserId(userId)
+                .stream()
+                .filter(account -> !account.isDelete())
+                .map(accountMapper::toDTO)
+                .toList();
+    }
+
+    @Override
+    public void deleteAccount(Long accountId) {
+        Account account = accountRepository.findById(accountId).orElseThrow(() -> new NotFoundException("Account with id: " + accountId + " not found."));
+        if(account.getBalance().compareTo(BigDecimal.ZERO) > 0){
+            throw new RuntimeException("Cannot delete account. Account still has a balance!");
+        }
+        account.setActive(false);
+        account.setDelete(true);
+        account.setDeletedAt(LocalDateTime.now());
+        accountRepository.save(account);
     }
 }

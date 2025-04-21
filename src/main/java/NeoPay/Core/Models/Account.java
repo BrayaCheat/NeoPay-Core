@@ -1,5 +1,6 @@
 package NeoPay.Core.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,10 +42,10 @@ public class Account {
     private String currency;
 
     @Column()
-    private boolean isActive = true;
+    private boolean active;
 
     @Column()
-    private boolean isDelete = false;
+    private boolean isDelete;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -55,7 +56,6 @@ public class Account {
 
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
     private List<Transaction> receivedTransactions;
-
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -73,7 +73,7 @@ public class Account {
 
     public enum AccountType {
         SAVING,
-        SPEDNING,
+        SPENDING,
         BUSINESS
     }
 }

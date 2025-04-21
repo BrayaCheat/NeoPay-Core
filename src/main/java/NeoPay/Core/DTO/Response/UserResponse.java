@@ -19,5 +19,5 @@ public class UserResponse {
     private String username;
     private String email;
     private LocalDateTime lastLogin;
-    private List<AccountResponse> accounts;
+//    private List<AccountResponse> accounts;
 }

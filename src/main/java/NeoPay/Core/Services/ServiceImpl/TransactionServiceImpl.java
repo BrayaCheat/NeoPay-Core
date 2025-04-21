@@ -150,4 +150,8 @@ public class TransactionServiceImpl implements TransactionService {
         return transactionRepository.findAll(spec, pageable).map(transactionMapper::toDTO);
     }
 
+    @Override
+    public Long transactionCount(Long userId) {
+        return transactionRepository.transactionCount(userId);
+    }
 }

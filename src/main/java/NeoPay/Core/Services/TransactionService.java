@@ -11,4 +11,5 @@ public interface TransactionService {
     List<TransactionResponse> getTransaction(Long accountId, Pageable pageable);
     Page<TransactionResponse> getReceiveTransactions(Long accountId, Pageable pageable, String senderAccountNumber, String receiverAccountNumber);
     Page<TransactionResponse> getSenderTransactions(Long accountId, Pageable pageable, String senderAccountNumber, String receiverAccountNumber);
+    Long transactionCount(Long userId);
 }

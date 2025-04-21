@@ -1,6 +1,7 @@
 package NeoPay.Core.Controllers;
 
 import NeoPay.Core.DTO.Response.UserResponse;
+import NeoPay.Core.Models.User;
 import NeoPay.Core.Services.ServiceImpl.UserServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +21,7 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserResponse> getSelf(){
+    public ResponseEntity<User> getSelf(){
         return ResponseEntity.status(200).body(userService.getSelf());
     }
 
