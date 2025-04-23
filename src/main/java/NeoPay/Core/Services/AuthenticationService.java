@@ -2,6 +2,7 @@ package NeoPay.Core.Services;
 
 import NeoPay.Core.DTO.Request.LoginRequest;
 import NeoPay.Core.DTO.Request.RegisterRequest;
+import NeoPay.Core.Exceptions.EmailAlreadyExistsException;
 import NeoPay.Core.Models.Role;
 import NeoPay.Core.Models.User;
 import NeoPay.Core.Repositories.RoleRepository;
@@ -37,6 +38,9 @@ public class AuthenticationService {
     }
 
     public User signup(RegisterRequest dto) {
+        if(userRepository.existsByEmail(dto.getEmail())){
+            throw new EmailAlreadyExistsException("This email is already taken");
+        }
         Role userRole = roleRepository.findByRole("USER").orElseGet(() -> roleRepository.save(Role.builder().role("USER").build()));
         Set<Role> role = new HashSet<>();
         role.add(userRole);

@@ -6,6 +6,7 @@ import NeoPay.Core.DTO.Response.LoginResponse;
 import NeoPay.Core.Models.User;
 import NeoPay.Core.Services.AuthenticationService;
 import NeoPay.Core.Services.JwtService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,18 +26,18 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody RegisterRequest registerUserDto) {
-        return ResponseEntity.status(201).body(authenticationService.signup(registerUserDto));
+    public ResponseEntity<User> register(@Valid @RequestBody RegisterRequest registerUserDto) {
+        return ResponseEntity.status(200).body(authenticationService.signup(registerUserDto));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginUserDto) {
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginUserDto) {
         User authenticatedUser = authenticationService.login(loginUserDto);
         String jwtToken = jwtService.generateToken(authenticatedUser);
         LoginResponse loginResponse = LoginResponse.builder()
                 .token(jwtToken)
                 .expiresIn(jwtService.getExpirationTime())
                 .build();
-        return ResponseEntity.status(201).body(loginResponse);
+        return ResponseEntity.status(200).body(loginResponse);
     }
 }

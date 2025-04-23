@@ -16,6 +16,6 @@ public class LoginRequest {
     private String email;
 
     @NotBlank(message = "Password is required.")
-    @Size(min = 6, message = "Password must be at least 6 characters long.")
+//    @Size(min = 6, message = "Password must be at least 6 characters long.")
     private String password;
 }
